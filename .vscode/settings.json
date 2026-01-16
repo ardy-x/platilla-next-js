@@ -52,5 +52,14 @@
     "titleBar.inactiveBackground": "#21573299",
     "titleBar.inactiveForeground": "#e7e7e799"
   },
-  "peacock.color": "#215732"
+  "peacock.color": "#215732",
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "text": "Genera siempre el mensaje del commit en español."
+    },
+    {
+      "text": "Mantén el formato de Conventional Commits (feat, fix, docs, style, refactor, test, chore, perf, ci, build, revert). y con scope siempre"
+    },
+    { "text": "Usa imperativo (ej: 'agrega' en lugar de 'agregado')." }
+  ]
 }
