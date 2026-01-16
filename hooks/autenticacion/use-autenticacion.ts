@@ -41,7 +41,7 @@ interface DatosUbicacion {
   longitud?: number | null;
 }
 
-export function useAuth() {
+export function useAutenticacion() {
   const defaultDatosUsuario: DatosUsuario = {
     idUsuario: '',
     nombreCompleto: '',

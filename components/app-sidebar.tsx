@@ -21,11 +21,11 @@ import {
 import { NavSections } from '@/components/nav-sections';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
-import { useAuth } from '@/hooks/autenticacion/use-autenticacion';
+import { useAutenticacion } from '@/hooks/autenticacion/use-autenticacion';
 import { NavSystem } from './nav-system';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { datosSistema, datosUsuario, cerrarSesion } = useAuth();
+  const { datosSistema, datosUsuario, cerrarSesion } = useAutenticacion();
 
   const getIcon = (iconName?: string): LucideIcon => {
     const iconMap: Record<string, LucideIcon> = {

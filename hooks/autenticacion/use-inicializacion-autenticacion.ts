@@ -2,13 +2,13 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { obtenerMensajeError } from '@/lib/api-helpers';
 import { autenticacionService } from '@/services/autenticacion-service';
-import { useAuth } from './use-autenticacion';
+import { useAutenticacion } from './use-autenticacion';
 
 export function useInicializacionAutenticacion() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const { setDatosUsuario, setDatosSistema, setDatosUbicacion } = useAuth();
+  const { setDatosUsuario, setDatosSistema, setDatosUbicacion } = useAutenticacion();
 
   const inicializadoRef = useRef(false);
 
