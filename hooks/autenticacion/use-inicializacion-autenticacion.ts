@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { ENVS } from '@/config/envs.config';
 import { obtenerMensajeError } from '@/lib/api-helpers';
 import { autenticacionService } from '@/services/autenticacion-service';
 import { useAutenticacion } from './use-autenticacion';
@@ -43,10 +44,16 @@ export function useInicializacionAutenticacion() {
       if (ubicacionUsuario) {
         setDatosUbicacion(ubicacionUsuario);
       }
-      setTimeout(() => {
-        router.replace('/dashboard');
+
+      if (ENVS.isDevelopment) {
+        setTimeout(() => {
+          router.replace('/dashboard');
+          setLoading(false);
+        }, 1500);
+      } else {
         setLoading(false);
-      }, 5000);
+        router.replace('/dashboard');
+      }
     } catch (error) {
       setError(obtenerMensajeError(error));
       setLoading(false);
