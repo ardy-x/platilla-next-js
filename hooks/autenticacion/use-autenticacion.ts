@@ -124,6 +124,7 @@ export function useAuth() {
     localStorage.removeItem('datosSistema');
     localStorage.removeItem('ubicacionUsuario');
     localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
 
     window.close();
   };
