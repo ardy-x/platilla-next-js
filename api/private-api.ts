@@ -1,5 +1,5 @@
+import type { RespuestaBase } from '@/app/_types/respuesta.types';
 import { ENVS } from '@/config/envs.config';
-import type { RespuestaBase } from '../types/respuesta.types';
 
 const BASE_URL = ENVS.api.url;
 const TIMEOUT = 20000;
@@ -15,44 +15,14 @@ let failedQueue: Array<{
   reject: (error?: unknown) => void;
 }> = [];
 
-export const guardarToken = (accessToken: string, refreshToken: string): void => {
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('refreshToken', refreshToken);
-  }
-};
-
-export const limpiarToken = (): void => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('datosUsuario');
-    localStorage.removeItem('datosSistema');
-    localStorage.removeItem('ubicacionUsuario');
-  }
-};
-
-const obtenerToken = (): string | null => {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('accessToken');
-};
-
 const refreshToken = async (): Promise<void> => {
-  const response = await fetch(`${BASE_URL}/autenticacion/refresh`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  const response = await fetch('/api/refresh', {
+    method: 'POST',
   });
 
   if (!response.ok) {
-    throw new Error('Failed to refresh token');
-  }
-
-  const data: RespuestaBase<{ accessToken: string; refreshToken: string }> = await response.json();
-
-  if (data?.response?.accessToken) {
-    guardarToken(data.response.accessToken, data.response.refreshToken);
+    const errorData = await response.json().catch(() => ({ message: 'Error desconocido' }));
+    throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
   }
 };
 
@@ -73,15 +43,10 @@ async function fetchWithAuthAndRefresh(url: string, options: FetchOptions = {}):
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  const token = obtenerToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(fetchOptions.headers as Record<string, string>),
   };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
 
   try {
     const response = await fetch(url, {
@@ -112,12 +77,8 @@ async function fetchWithAuthAndRefresh(url: string, options: FetchOptions = {}):
       } catch (refreshError) {
         processQueue(refreshError);
 
-        // Check if refresh failed with 403
-        if (refreshError instanceof Error) {
-          limpiarToken();
-          if (typeof window !== 'undefined') {
-            window.location.href = process.env.NEXT_PUBLIC_LOGIN_URL as string;
-          }
+        if (typeof window !== 'undefined') {
+          window.location.href = '/auth/unauthorized?expired=true';
         }
         throw refreshError;
       } finally {

@@ -1,7 +1,6 @@
 'use client';
 
 import { AppSidebar } from '@/components/app-sidebar';
-import { ProteccionRuta } from '@/components/layout/ProteccionRuta';
 import { ModeToggle } from '@/components/mode-toggle';
 import { Separator } from '@/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
@@ -10,7 +9,7 @@ import { ENVS } from '@/config/envs.config';
 
 export default function LayoutPrincipal({ children }: { children: React.ReactNode }) {
   return (
-    <ProteccionRuta>
+    <>
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset>
@@ -30,6 +29,6 @@ export default function LayoutPrincipal({ children }: { children: React.ReactNod
         </SidebarInset>
       </SidebarProvider>
       <Toaster />
-    </ProteccionRuta>
+    </>
   );
 }

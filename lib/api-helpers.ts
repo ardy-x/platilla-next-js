@@ -1,4 +1,4 @@
-import type { RespuestaBase } from '@/types/respuesta.types';
+import type { RespuestaBase } from '@/app/_types/respuesta.types';
 
 export class FetchError extends Error {
   constructor(

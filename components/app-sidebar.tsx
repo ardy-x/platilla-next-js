@@ -1,31 +1,36 @@
 'use client';
 
-import {
-  Ambulance,
-  BarChart3,
-  Calendar,
-  CheckCircle,
-  ClockAlert,
-  Home,
-  type LucideIcon,
-  MapPin,
-  MessageSquareWarning,
-  Monitor,
-  MonitorCheck,
-  Settings,
-  ShieldAlert,
-  User,
-  UserRound,
-  UsersRound,
-} from 'lucide-react';
+import { BarChart3, Calendar, CheckCircle, Home, type LucideIcon, MessageSquareWarning, Monitor, MonitorCheck, Settings, User, UserRound, UsersRound } from 'lucide-react';
 import { NavSections } from '@/components/nav-sections';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
-import { useAutenticacion } from '@/hooks/autenticacion/use-autenticacion';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useAutenticacion } from '@/hooks/use-autenticacion';
 import { NavSystem } from './nav-system';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { datosSistema, datosUsuario, cerrarSesion } = useAutenticacion();
+
+  // Validar que los datos estén disponibles - mostrar skeleton durante carga inicial
+  if (!datosSistema || !datosUsuario) {
+    return (
+      <Sidebar {...props}>
+        <SidebarHeader>
+          <Skeleton className="h-10 w-full" />
+        </SidebarHeader>
+        <SidebarContent>
+          <div className="space-y-2 p-2 mt-4">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-8 w-full" />
+          </div>
+        </SidebarContent>
+        <SidebarFooter>
+          <Skeleton className="h-12 w-full" />
+        </SidebarFooter>
+      </Sidebar>
+    );
+  }
 
   const getIcon = (iconName?: string): LucideIcon => {
     const iconMap: Record<string, LucideIcon> = {
@@ -34,17 +39,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       BarChart3: BarChart3,
       MonitorCheck: MonitorCheck,
       User: User,
-      ShieldAlert: ShieldAlert,
       CheckCircle: CheckCircle,
       Calendar: Calendar,
-      MapPin: MapPin,
       Monitor: Monitor,
       UserRound: UserRound,
       MessageSquareWarning: MessageSquareWarning,
-      ClockAlert: ClockAlert,
       Settings: Settings,
       FileText: BarChart3,
-      Ambulance: Ambulance,
     };
     const normalizedIconName = iconName?.replace(/\s+/g, '').replace(/^\w/, (c) => c.toUpperCase()) || '';
     return iconMap[normalizedIconName] || Home;
@@ -75,7 +76,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             nombre: datosUsuario.nombreCompleto,
             correo: datosUsuario.correo,
             avatar: datosUsuario.imagenUsuario,
-            rol: datosSistema.roles,
+            rol: datosSistema.rol,
             nombreUsuario: datosUsuario.nombreUsuario,
             unidad: datosUsuario.unidad,
             activo: datosUsuario.activo,

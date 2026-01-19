@@ -1,5 +1,5 @@
+import type { RespuestaBase } from '@/app/_types/respuesta.types';
 import { ENVS } from '@/config/envs.config';
-import type { RespuestaBase } from '../types/respuesta.types';
 
 const BASE_URL = ENVS.api.url;
 const TIMEOUT = 20000;

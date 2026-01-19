@@ -1,6 +1,12 @@
+'use client';
+
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 export default function PaginaSinAcceso() {
+  const searchParams = useSearchParams();
+  const expired = searchParams.get('expired') === 'true';
+
   return (
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-background px-4 gap-8">
       <div className="flex items-center gap-12 max-w-7xl">
@@ -14,7 +20,9 @@ export default function PaginaSinAcceso() {
             <Image src="/logos/logo-dntt.webp" alt="DNTT" width={100} height={100} className="object-contain" />
           </div>
           <h1 className="text-5xl text-center font-bold text-red-500">¡Acceso No Autorizado!</h1>
-          <p className="text-2xl text-center text-muted-foreground">Inicia sesión desde Kerberos (Sistema Unificado de Acceso Policial)</p>
+          <p className="text-2xl text-center text-muted-foreground">
+            {expired ? 'Tu sesión ha expirado. Inicia sesión nuevamente desde Kerberos (Sistema Unificado de Acceso Policial)' : 'Inicia sesión desde Kerberos (Sistema Unificado de Acceso Policial)'}
+          </p>
         </div>
       </div>
     </div>

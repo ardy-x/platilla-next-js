@@ -1,4 +1,4 @@
-import type { RespuestaBase } from '../types/respuesta.types';
+import type { RespuestaBase } from '@/app/_types/respuesta.types';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 const TIMEOUT = 20000;
@@ -7,26 +7,16 @@ interface FetchOptions extends RequestInit {
   timeout?: number;
 }
 
-const obtenerToken = (): string | null => {
-  if (typeof window === 'undefined') return null;
-  return localStorage.getItem('accessToken');
-};
-
 async function fetchWithAuth(url: string, options: FetchOptions = {}): Promise<Response> {
   const { timeout = TIMEOUT, ...fetchOptions } = options;
 
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
-  const token = obtenerToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(fetchOptions.headers as Record<string, string>),
   };
-
-  if (token) {
-    headers.Authorization = `Bearer ${token}`;
-  }
 
   try {
     const response = await fetch(url, {
