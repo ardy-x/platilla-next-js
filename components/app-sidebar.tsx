@@ -5,11 +5,18 @@ import { NavSections } from '@/components/nav-sections';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarRail } from '@/components/ui/sidebar';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useAutenticacion } from '@/hooks/use-autenticacion';
+import { cerrarSesionCliente, obtenerDatosSistemaCliente, obtenerDatosUsuarioCliente } from '@/lib/autenticacion-helpers-cliente';
 import { NavSystem } from './nav-system';
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { datosSistema, datosUsuario, cerrarSesion } = useAutenticacion();
+  const datosSistema = obtenerDatosSistemaCliente();
+  const datosUsuario = obtenerDatosUsuarioCliente();
+
+  const handleCerrarSesion = async () => {
+    if (datosSistema?.id) {
+      await cerrarSesionCliente(datosSistema.id);
+    }
+  };
 
   // Validar que los datos estén disponibles - mostrar skeleton durante carga inicial
   if (!datosSistema || !datosUsuario) {
@@ -83,7 +90,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             verificado: datosUsuario.verificado,
             ultimoAcceso: datosUsuario.ultimoAcceso,
           }}
-          onCerrarSesion={cerrarSesion}
+          onCerrarSesion={handleCerrarSesion}
         />
       </SidebarFooter>
       <SidebarRail />
