@@ -1,12 +1,12 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import publicApi from '@/api/public-api';
+import publicApiServer from '@/api/public-api-server';
 import type { DatosIntercambioCodigo, RespuestaIntercambioCodigo } from '@/app/_types/autenticacion.types';
 
 export async function intercambiarCodigoAction(codigo: string): Promise<DatosIntercambioCodigo> {
   // Llamar al backend usando el cliente API
-  const data = await publicApi.post<RespuestaIntercambioCodigo>('/autenticacion/intercambio-codigo', { codigo });
+  const data = await publicApiServer.post<RespuestaIntercambioCodigo>('/autenticacion/intercambio-codigo', { codigo });
 
   if (!data.response) {
     throw new Error('Respuesta inválida del servidor');

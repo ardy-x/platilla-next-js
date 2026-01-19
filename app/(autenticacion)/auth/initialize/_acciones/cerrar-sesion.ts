@@ -1,12 +1,12 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import privateApi from '@/api/private-api';
+import privateApiServer from '@/api/private-api-server';
 
 export async function cerrarSesionAction(idSistema: string): Promise<void> {
-  // Llamar al backend usando el cliente API privado
+  // Llamar al backend usando el cliente API privado del servidor
   try {
-    await privateApi.post('/autenticacion/cierre-sesion-sistema', { idSistema });
+    await privateApiServer.post('/autenticacion/cierre-sesion-sistema', { idSistema });
   } catch (error) {
     console.error('Error al cerrar sesión en el backend:', error);
   }

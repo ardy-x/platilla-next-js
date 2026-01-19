@@ -29,7 +29,7 @@ async function fetchWithTimeout(url: string, options: FetchOptions = {}): Promis
   }
 }
 
-const publicApi = {
+const publicApiServer = {
   get: async <T = unknown>(url: string, options?: FetchOptions): Promise<RespuestaBase<T>> => {
     const response = await fetchWithTimeout(`${BASE_URL}${url}`, {
       ...options,
@@ -74,4 +74,4 @@ const publicApi = {
   },
 };
 
-export default publicApi;
+export default publicApiServer;

@@ -1,6 +1,8 @@
+import { cookies } from 'next/headers';
 import type { RespuestaBase } from '@/app/_types/respuesta.types';
+import { ENVS } from '@/config/envs.config';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+const BASE_URL = ENVS.api.url;
 const TIMEOUT = 20000;
 
 interface FetchOptions extends RequestInit {
@@ -10,6 +12,9 @@ interface FetchOptions extends RequestInit {
 async function fetchWithAuth(url: string, options: FetchOptions = {}): Promise<Response> {
   const { timeout = TIMEOUT, ...fetchOptions } = options;
 
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get('accessToken')?.value;
+
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
 
@@ -18,20 +23,24 @@ async function fetchWithAuth(url: string, options: FetchOptions = {}): Promise<R
     ...(fetchOptions.headers as Record<string, string>),
   };
 
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
+
   try {
     const response = await fetch(url, {
       ...fetchOptions,
       signal: controller.signal,
-      credentials: 'include',
       headers,
     });
+
     return response;
   } finally {
     clearTimeout(timeoutId);
   }
 }
 
-const segipApi = {
+const privateApiServer = {
   get: async <T = unknown>(url: string, options?: FetchOptions): Promise<RespuestaBase<T>> => {
     const response = await fetchWithAuth(`${BASE_URL}${url}`, {
       ...options,
@@ -76,4 +85,4 @@ const segipApi = {
   },
 };
 
-export default segipApi;
+export default privateApiServer;
